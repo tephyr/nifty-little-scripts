@@ -14,13 +14,13 @@ if len(stlines) == 0:
     subprocess.Popen(["sublime_text"])
 else:
     # an instance of Sublime Text is running
-    winClass = window.get_active_class()
+    win_class = window.get_active_class()
 
-    if "sublime_text" not in winClass:
+    if "sublime_text" not in win_class:
         # if current window class is not "sublime_text.Sublime_text", then activate "Sublime"
         # doesn't matter how many instances are running; just activate one
         window.activate("Sublime", switchDesktop=True)
-    elif "sublime_text" in winClass and len(stlines) > 1:
+    elif "sublime_text" in win_class and len(stlines) > 1:
         # multiple windows, Sublime Text already active, move to next
         current_title = window.get_active_title()
         stinfolines = []
@@ -42,11 +42,5 @@ else:
             # activate first line
             window.activate(stinfolines[0], True)
         else:
-            target = 0
-            for line in stinfolines:
-                target += 1
-                if current_title == line:
-                    # use next
-                    break
-                    
-            window.activate(stinfolines[target], True)
+            target = stinfolines.index(current_title)
+            window.activate(stinfolines[target + 1], True)
