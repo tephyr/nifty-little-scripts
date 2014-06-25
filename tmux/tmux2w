@@ -1,0 +1,16 @@
+#!/bin/bash
+## Quick-and-dirty script to launch tmux with 1 window & 2 panes. ##
+## Hat tip: http://blog.htbaa.com/news/tmux-scripting ##
+SESSION=$USER
+
+# Create tmux session.
+tmux -2 new-session -d -s $SESSION
+
+# Create window.
+#tmux new-window -t $SESSION:1 -n 'Quick-and-dirty'
+
+# Create 2 vertical (stacked) panes.
+tmux split-window -v
+
+# Attach to tmux session.
+tmux -2 attach-session -t $SESSION
