@@ -1,0 +1,25 @@
+#!/bin/bash
+## Launch two processes. ##
+## Hat tip: http://blog.htbaa.com/news/tmux-scripting ##
+SESSION="tmux2pexample"
+
+# Create tmux session.
+tmux -2 new-session -d -s $SESSION
+
+# Create 2 vertical (stacked) panes.
+tmux split-window -v
+
+# Top window: process 1.
+tmux select-pane -t 0
+tmux send-keys "cd ~/code/PROCESS1" C-m
+tmux send-keys "workon process1ve" C-m      # Activate process1ve virtualenv.
+tmux send-keys "./runner.py -c config.ini run" C-m  # Run code.
+
+# Bottom window: process 2.
+tmux select-pane -t 1
+tmux send-keys "cd ~/code/PROCESS2" C-m
+tmux send-keys "workon process2ve" C-m
+tmux send-keys "./runner.py -c config.ini run" C-m
+
+# Attach to tmux session.
+tmux -2 attach-session -t $SESSION
