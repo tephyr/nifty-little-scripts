@@ -1,0 +1,37 @@
+#!/bin/bash
+## Launch web app server. ##
+## Hat tip: http://blog.htbaa.com/news/tmux-scripting ##
+SESSION="webapp"
+
+cd ~/code/SOURCEDIR
+
+# Create tmux session.
+tmux -2 new-session -d -s $SESSION
+
+# Create 3 vertical (stacked) panes.
+tmux split-window -v
+
+# Top window: launch web app server.
+tmux select-pane -t 0
+tmux send-keys "run_webappserver" C-m
+
+# Middle window: launch ngrok, watching port 8118.
+tmux split-window -v
+tmux select-pane -t 1
+tmux send-keys "~/dev/ngrok 8118" C-m
+
+# Bottom window: launch gulp.
+tmux select-pane -t 2
+tmux send-keys "workon webapp" C-m              # Activate virtualenv "webapp".
+tmux send-keys "cd webapp; gulp full-build" C-m # Change to webapp/ & run full build in gulp.
+tmux send-keys "gulp watch" C-m                 # Start gulp watch.
+
+# Set the right side of the status to pane's index & pane's height.
+tmux set-option status-right '#{pane_index}: #{pane_height}'
+
+# Resize panes at once (more predictable).
+tmux resize-pane -t 0 -y 15
+tmux resize-pane -t 1 -y 15
+
+# Attach to tmux session.
+tmux -2 attach-session -t $SESSION
